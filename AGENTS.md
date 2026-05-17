@@ -5,6 +5,11 @@
 Hopbar is a lightweight native macOS menu bar launcher written in Swift/AppKit.
 It reads `~/.hopbar.json`, builds a nested status bar menu, opens URLs, and runs commands in iTerm or Terminal.
 
+## Git
+
+- Do not create commits unless the user explicitly asks for a commit.
+- Do not push unless the user explicitly asks for a push.
+
 ## Commands
 
 - Run tests: `swift test`
