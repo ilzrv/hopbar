@@ -1,6 +1,6 @@
 APP_NAME := Hopbar
 BUNDLE := dist/$(APP_NAME).app
-DMG := dist/$(APP_NAME)-0.1.0-preview.dmg
+DMG := dist/$(APP_NAME)-0.2.0-preview.dmg
 EXECUTABLE := .build/release/Hopbar
 
 .PHONY: build app dmg package test verify clean

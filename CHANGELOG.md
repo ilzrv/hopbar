@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0-preview - 2026-05-17
+
+- Added Launch at Login support on macOS 13 or newer.
+- Grouped config actions under a dedicated Config submenu.
+- Added Ghostty command launch support for tab, window, and current open modes.
+- Updated Automation permission text for Ghostty.
+
 ## 0.1.0-preview - 2026-05-17
 
 - Initial preview release.

@@ -6,7 +6,7 @@ Hopbar lives only in the macOS menu bar. It reads a small JSON file, builds a ne
 
 ## Install Preview DMG
 
-Download `Hopbar-0.1.0-preview.dmg` from a release, open it, drag `Hopbar.app` to `Applications`, then launch Hopbar from `Applications`.
+Download `Hopbar-0.2.0-preview.dmg` from a release, open it, drag `Hopbar.app` to `Applications`, then launch Hopbar from `Applications`.
 
 Current preview builds are ad-hoc signed, not Apple Developer ID notarized. If macOS blocks the first launch, use right-click -> Open.
 
@@ -21,7 +21,7 @@ open "dist/Hopbar.app"
 
 ```sh
 make dmg
-open "dist/Hopbar-0.1.0-preview.dmg"
+open "dist/Hopbar-0.2.0-preview.dmg"
 ```
 
 Verify local artifacts:
@@ -83,8 +83,8 @@ Generated artifacts are written to `dist/` and are not committed.
 Preview releases are built by GitHub Actions from `v*` tags. The workflow uploads the preview DMG and `SHA256SUMS` to the GitHub Release.
 
 ```sh
-git tag v0.1.0-preview
-git push origin v0.1.0-preview
+git tag v0.2.0-preview
+git push origin v0.2.0-preview
 ```
 
 Preview release artifacts are ad-hoc signed and not Apple Developer ID notarized.

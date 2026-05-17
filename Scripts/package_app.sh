@@ -6,7 +6,7 @@ cd "$ROOT"
 
 APP_NAME="Hopbar"
 BUNDLE_ID="dev.hopbar.app"
-VERSION="0.1.0"
+VERSION="0.2.0"
 BUILD="1"
 CONFIGURATION="release"
 BUILD_ROOT="$ROOT/.build/release-package"
