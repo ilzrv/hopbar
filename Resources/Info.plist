@@ -25,6 +25,6 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>Hopbar needs Automation permission to run commands in iTerm or Terminal from the menu bar. Terminal tab mode also uses System Events.</string>
+	<string>Hopbar needs Automation permission to run commands in iTerm, Terminal, or Ghostty from the menu bar. Terminal tab mode also uses System Events.</string>
 </dict>
 </plist>

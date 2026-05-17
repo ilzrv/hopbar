@@ -36,6 +36,30 @@ final class CommandRunnerTests: XCTestCase {
         XCTAssertTrue(script.contains("selected tab of front window"))
     }
 
+    func testGhosttyWindowScriptCreatesWindowAndRunsCommand() {
+        let script = CommandRunner.script(command: "pwd", terminal: .ghostty, open: .window)
+
+        XCTAssertTrue(script.contains("application \"Ghostty\""))
+        XCTAssertTrue(script.contains("new window with configuration cfg"))
+        XCTAssertTrue(script.contains("input text \"pwd\" to term"))
+        XCTAssertTrue(script.contains("send key \"enter\" to term"))
+    }
+
+    func testGhosttyTabScriptCreatesTabInFrontWindow() {
+        let script = CommandRunner.script(command: "uptime", terminal: .ghostty, open: .tab)
+
+        XCTAssertTrue(script.contains("new tab in front window with configuration cfg"))
+        XCTAssertTrue(script.contains("focused terminal of tabRef"))
+        XCTAssertTrue(script.contains("input text \"uptime\" to term"))
+    }
+
+    func testGhosttyCurrentScriptUsesFocusedTerminal() {
+        let script = CommandRunner.script(command: "top", terminal: .ghostty, open: .current)
+
+        XCTAssertTrue(script.contains("focused terminal of selected tab of front window"))
+        XCTAssertTrue(script.contains("input text \"top\" to term"))
+    }
+
     func testEscapesAppleScriptStringContent() {
         let script = CommandRunner.script(command: #"echo "hello" \ world"#, terminal: .iterm, open: .current)
 
