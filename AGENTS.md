@@ -33,6 +33,7 @@ It reads `~/.hopbar.json`, builds a nested status bar menu, opens URLs, and runs
 - Do not add SwiftUI, storyboards, XIBs, or preference windows unless explicitly requested.
 - Preserve the minimal JSON config model.
 - Keep command execution isolated in `CommandRunner`.
+- Keep launch-at-login behavior isolated in `LoginItemManager`.
 - Keep config parsing and validation isolated in `ConfigStore` and `MenuModel`.
 - Use repo-native SVG/ICNS assets for icons; do not depend on generated bitmap-only assets.
 
