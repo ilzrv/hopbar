@@ -79,6 +79,8 @@ final class CommandRunner: CommandRunning {
             return itermScript(command: command, open: open)
         case .terminal:
             return terminalScript(command: command, open: open)
+        case .ghostty:
+            return ghosttyScript(command: command, open: open)
         }
     }
 
@@ -164,6 +166,55 @@ final class CommandRunner: CommandRunning {
               else
                 do script "\(command)" in selected tab of front window
               end if
+            end tell
+            """
+        }
+    }
+
+    private static func ghosttyScript(command: String, open: OpenMode) -> String {
+        let command = command.appleScriptLiteral
+
+        switch open {
+        case .window:
+            return """
+            tell application "Ghostty"
+              activate
+              set cfg to new surface configuration
+              set win to new window with configuration cfg
+              set term to focused terminal of selected tab of win
+              input text "\(command)" to term
+              send key "enter" to term
+            end tell
+            """
+        case .tab:
+            return """
+            tell application "Ghostty"
+              activate
+              set cfg to new surface configuration
+              if (count of windows) is 0 then
+                set win to new window with configuration cfg
+                set term to focused terminal of selected tab of win
+              else
+                set tabRef to new tab in front window with configuration cfg
+                set term to focused terminal of tabRef
+              end if
+              input text "\(command)" to term
+              send key "enter" to term
+            end tell
+            """
+        case .current:
+            return """
+            tell application "Ghostty"
+              activate
+              if (count of windows) is 0 then
+                set cfg to new surface configuration
+                set win to new window with configuration cfg
+                set term to focused terminal of selected tab of win
+              else
+                set term to focused terminal of selected tab of front window
+              end if
+              input text "\(command)" to term
+              send key "enter" to term
             end tell
             """
         }

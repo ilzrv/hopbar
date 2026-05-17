@@ -63,6 +63,22 @@ final class ConfigStoreTests: XCTestCase {
         XCTAssertEqual(model.entries[0].kind, .command("top", terminal: .terminal, open: .current))
     }
 
+    func testAllowsGhosttyTerminal() throws {
+        let config = """
+        {
+          "terminal": "ghostty",
+          "open": "window",
+          "items": [
+            { "title": "Ghostty Command", "command": "pwd" }
+          ]
+        }
+        """
+
+        let model = try load(config)
+
+        XCTAssertEqual(model.entries[0].kind, .command("pwd", terminal: .ghostty, open: .window))
+    }
+
     func testGroupTerminalAndOpenApplyToChildren() throws {
         let config = """
         {

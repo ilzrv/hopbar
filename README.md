@@ -2,7 +2,7 @@
 
 Native lightweight macOS menu bar launcher written in Swift/AppKit.
 
-Hopbar lives only in the macOS menu bar. It reads a small JSON file, builds a nested menu, opens URLs, and runs commands in iTerm or Terminal.
+Hopbar lives only in the macOS menu bar. It reads a small JSON file, builds a nested menu, opens URLs, and runs commands in iTerm, Terminal, or Ghostty.
 
 ## Install Preview DMG
 
@@ -51,7 +51,7 @@ On first launch, Hopbar creates `~/.hopbar.json`.
 }
 ```
 
-- `terminal`: `iterm` or `terminal`; default is `iterm`.
+- `terminal`: `iterm`, `terminal`, or `ghostty`; default is `iterm`.
 - `open`: `tab`, `window`, or `current`; default is `tab`.
 - Each item must define exactly one of `command`, `url`, or `items`.
 - `terminal` and `open` can be overridden per command item or group.
@@ -60,7 +60,9 @@ Hopbar uses its own minimal JSON format.
 
 ## Permissions
 
-Hopbar uses Apple Events to run commands in iTerm or Terminal. macOS may ask for Automation permission on first use.
+Hopbar uses Apple Events to run commands in iTerm, Terminal, or Ghostty. macOS may ask for Automation permission on first use.
+
+Ghostty command execution requires Ghostty 1.3.0 or newer.
 
 Terminal tab mode uses System Events to create a new tab, so macOS may also ask for Accessibility permission.
 

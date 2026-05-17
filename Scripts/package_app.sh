@@ -48,7 +48,7 @@ info = {
     "CFBundleVersion": build,
     "LSMinimumSystemVersion": "12.0",
     "LSUIElement": True,
-    "NSAppleEventsUsageDescription": "Hopbar needs Automation permission to run commands in iTerm or Terminal from the menu bar. Terminal tab mode also uses System Events.",
+    "NSAppleEventsUsageDescription": "Hopbar needs Automation permission to run commands in iTerm, Terminal, or Ghostty from the menu bar. Terminal tab mode also uses System Events.",
 }
 
 info_path.parent.mkdir(parents=True, exist_ok=True)
