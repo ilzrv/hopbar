@@ -12,6 +12,7 @@ It reads `~/.hopbar.json`, builds a nested status bar menu, opens URLs, and runs
 - Build preview DMG: `make dmg`
 - Verify preview artifacts: `make verify`
 - Clean generated artifacts: `make clean`
+- Create a preview release locally: `make dmg && make verify`
 
 ## Release Model
 
@@ -19,6 +20,7 @@ It reads `~/.hopbar.json`, builds a nested status bar menu, opens URLs, and runs
 - Preview DMGs are not Apple Developer ID notarized.
 - Do not describe preview DMGs as fully trusted production releases until Developer ID signing and notarization are added.
 - Generated artifacts belong in `dist/` and `.build/`; do not commit them.
+- GitHub release artifacts are produced by `.github/workflows/release.yml` on `v*` tags.
 
 ## Code Guidelines
 

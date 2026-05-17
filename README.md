@@ -74,6 +74,17 @@ make verify
 
 Generated artifacts are written to `dist/` and are not committed.
 
+## Releases
+
+Preview releases are built by GitHub Actions from `v*` tags. The workflow uploads the preview DMG and `SHA256SUMS` to the GitHub Release.
+
+```sh
+git tag v0.1.0-preview
+git push origin v0.1.0-preview
+```
+
+Preview release artifacts are ad-hoc signed and not Apple Developer ID notarized.
+
 ## License
 
 MIT

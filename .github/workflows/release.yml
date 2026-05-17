@@ -1,0 +1,46 @@
+name: Release Preview DMG
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and Upload Preview DMG
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Swift version
+        run: swift --version
+
+      - name: Run tests
+        run: swift test
+
+      - name: Build preview DMG
+        run: make dmg
+
+      - name: Verify preview artifacts
+        run: make verify
+
+      - name: Generate checksum
+        run: |
+          shasum -a 256 dist/Hopbar-*-preview.dmg | tee dist/SHA256SUMS
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Hopbar ${{ github.ref_name }}
+          body: |
+            Preview build for Hopbar.
+
+            This DMG is ad-hoc signed, not Apple Developer ID notarized. If macOS blocks the first launch, use right-click -> Open.
+          files: |
+            dist/Hopbar-*-preview.dmg
+            dist/SHA256SUMS
