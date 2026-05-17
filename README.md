@@ -64,6 +64,8 @@ Hopbar uses Apple Events to run commands in iTerm or Terminal. macOS may ask for
 
 Terminal tab mode uses System Events to create a new tab, so macOS may also ask for Accessibility permission.
 
+Launch at login uses Apple's native login item API and is available on macOS 13 or newer.
+
 ## Development
 
 ```sh

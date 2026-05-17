@@ -5,16 +5,20 @@ import Foundation
 final class MenuController: NSObject, NSMenuDelegate {
     private let configStore: ConfigStore
     private let commandRunner: CommandRunning
+    private let loginItemManager: LoginItemManager
     private let menu = NSMenu()
     private let statusItem: NSStatusItem
     private var lastModificationDate: Date?
+    private var launchAtLoginMenuItem: NSMenuItem?
 
     init(
         configStore: ConfigStore = ConfigStore(),
-        commandRunner: CommandRunning = CommandRunner()
+        commandRunner: CommandRunning = CommandRunner(),
+        loginItemManager: LoginItemManager = LoginItemManager()
     ) {
         self.configStore = configStore
         self.commandRunner = commandRunner
+        self.loginItemManager = loginItemManager
         self.statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         super.init()
 
@@ -34,6 +38,8 @@ final class MenuController: NSObject, NSMenuDelegate {
         case .failure(let error):
             renderError(error)
         }
+
+        updateLaunchAtLoginMenuItem()
     }
 
     private func configureStatusItem() {
@@ -119,11 +125,23 @@ final class MenuController: NSObject, NSMenuDelegate {
 
     private func appendFixedItems() {
         menu.addItem(.separator())
-        menu.addItem(fixedItem(title: "Open Config", action: #selector(openConfig)))
-        menu.addItem(fixedItem(title: "Reveal Config", action: #selector(revealConfig)))
-        menu.addItem(fixedItem(title: "Reload", action: #selector(reloadConfig)))
+        menu.addItem(configMenuItem())
+        let launchAtLoginItem = fixedItem(title: "Launch at Login", action: #selector(toggleLaunchAtLogin))
+        self.launchAtLoginMenuItem = launchAtLoginItem
+        menu.addItem(launchAtLoginItem)
         menu.addItem(.separator())
         menu.addItem(fixedItem(title: "Quit", action: #selector(quit)))
+        updateLaunchAtLoginMenuItem()
+    }
+
+    private func configMenuItem() -> NSMenuItem {
+        let item = NSMenuItem(title: "Config", action: nil, keyEquivalent: "")
+        let submenu = NSMenu(title: "Config")
+        submenu.addItem(fixedItem(title: "Open", action: #selector(openConfig)))
+        submenu.addItem(fixedItem(title: "Reveal", action: #selector(revealConfig)))
+        submenu.addItem(fixedItem(title: "Reload", action: #selector(reloadConfig)))
+        item.submenu = submenu
+        return item
     }
 
     private func fixedItem(title: String, action: Selector) -> NSMenuItem {
@@ -160,6 +178,26 @@ final class MenuController: NSObject, NSMenuDelegate {
     private func reloadConfig() {
         _ = configStore.ensureConfigExists()
         reloadMenu(force: true)
+    }
+
+    @objc
+    private func toggleLaunchAtLogin() {
+        do {
+            try loginItemManager.setEnabled(!loginItemManager.isEnabled)
+            updateLaunchAtLoginMenuItem()
+        } catch {
+            NSLog("Hopbar launch-at-login update failed: \(error)")
+            NSSound.beep()
+        }
+    }
+
+    private func updateLaunchAtLoginMenuItem() {
+        guard let launchAtLoginMenuItem else {
+            return
+        }
+
+        launchAtLoginMenuItem.isEnabled = loginItemManager.isSupported
+        launchAtLoginMenuItem.state = loginItemManager.isEnabled ? .on : .off
     }
 
     @objc
