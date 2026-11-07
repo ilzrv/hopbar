@@ -4,12 +4,12 @@ import XCTest
 
 @MainActor
 final class CommandRunnerTests: XCTestCase {
-    func testURLActionUsesWorkspaceOpener() throws {
+    func testURLActionUsesWorkspaceOpener() async throws {
         let opener = RecordingURLOpener()
         let runner = CommandRunner(scriptExecutor: RecordingAppleScriptExecutor(), urlOpener: opener)
         let url = URL(string: "https://example.com")!
 
-        try runner.run(.openURL(url))
+        try await runner.run(.openURL(url))
 
         XCTAssertEqual(opener.openedURLs, [url])
     }
@@ -66,11 +66,11 @@ final class CommandRunnerTests: XCTestCase {
         XCTAssertTrue(script.contains(#"write text "echo \"hello\" \\ world""#))
     }
 
-    func testCommandActionExecutesGeneratedScript() throws {
+    func testCommandActionExecutesGeneratedScript() async throws {
         let executor = RecordingAppleScriptExecutor()
         let runner = CommandRunner(scriptExecutor: executor, urlOpener: RecordingURLOpener())
 
-        try runner.run(.runCommand("pwd", terminal: .terminal, open: .window))
+        try await runner.run(.runCommand("pwd", terminal: .terminal, open: .window))
 
         XCTAssertEqual(executor.executedScripts.count, 1)
         XCTAssertTrue(executor.executedScripts[0].contains("application \"Terminal\""))

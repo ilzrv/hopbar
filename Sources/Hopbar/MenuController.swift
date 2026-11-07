@@ -2,7 +2,7 @@ import AppKit
 import Foundation
 
 @MainActor
-final class MenuController: NSObject, NSMenuDelegate {
+final class MenuController: NSObject, NSMenuDelegate, NSMenuItemValidation {
     private let configStore: ConfigStore
     private let commandRunner: CommandRunning
     private let loginItemManager: LoginItemManager
@@ -10,6 +10,7 @@ final class MenuController: NSObject, NSMenuDelegate {
     private let statusItem: NSStatusItem
     private var lastModificationDate: Date?
     private var launchAtLoginMenuItem: NSMenuItem?
+    private var isRunningRexAction = false
 
     init(
         configStore: ConfigStore = ConfigStore(),
@@ -151,16 +152,33 @@ final class MenuController: NSObject, NSMenuDelegate {
     }
 
     @objc
+    func validateMenuItem(_ item: NSMenuItem) -> Bool {
+        guard item.action == #selector(runMenuAction(_:)), let box = item.representedObject as? MenuActionBox else {
+            return true
+        }
+        return !box.action.usesRex || !isRunningRexAction
+    }
+
+    @objc
     private func runMenuAction(_ sender: NSMenuItem) {
-        guard let box = sender.representedObject as? MenuActionBox else {
+        guard let box = sender.representedObject as? MenuActionBox,
+              !box.action.usesRex || !isRunningRexAction else {
             return
         }
 
-        do {
-            try commandRunner.run(box.action)
-        } catch {
-            NSLog("Hopbar command failed: \(error)")
-            NSSound.beep()
+        if box.action.usesRex { isRunningRexAction = true }
+        Task {
+            defer { if box.action.usesRex { isRunningRexAction = false } }
+            do {
+                try await commandRunner.run(box.action)
+            } catch {
+                let alert = NSAlert()
+                alert.messageText = "Could Not Run Command"
+                alert.informativeText = String(describing: error)
+                alert.alertStyle = .warning
+                NSApplication.shared.activate(ignoringOtherApps: true)
+                alert.runModal()
+            }
         }
     }
 

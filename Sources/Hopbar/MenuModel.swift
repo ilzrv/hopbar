@@ -4,6 +4,7 @@ enum TerminalPreference: String, CaseIterable, Equatable {
     case iterm
     case terminal
     case ghostty
+    case rex
 }
 
 extension TerminalPreference: Decodable {
@@ -13,7 +14,7 @@ extension TerminalPreference: Decodable {
         guard let value = TerminalPreference(rawValue: rawValue) else {
             throw DecodingError.dataCorruptedError(
                 in: container,
-                debugDescription: "Invalid terminal '\(rawValue)'. Expected one of: iterm, terminal, ghostty."
+                debugDescription: "Invalid terminal '\(rawValue)'. Expected one of: iterm, terminal, ghostty, rex."
             )
         }
         self = value

@@ -21,6 +21,9 @@ jobs:
       - name: Show Swift version
         run: swift --version
 
+      - name: Install Lua for Rex tests
+        run: brew install lua
+
       - name: Run tests
         run: swift test
 
