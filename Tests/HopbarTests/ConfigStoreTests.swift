@@ -105,6 +105,32 @@ final class ConfigStoreTests: XCTestCase {
         XCTAssertEqual(children[0].kind, .command("uptime", terminal: .terminal, open: .window))
     }
 
+    func testRexCanBeInheritedAndOverridden() throws {
+        let model = try load("""
+        {
+          "terminal": " ReX ",
+          "items": [
+            { "title": "Rex Command", "command": "pwd" },
+            {
+              "title": "Other Terminal",
+              "terminal": "terminal",
+              "items": [
+                { "title": "Override", "command": "uptime", "terminal": "rex", "open": "current" },
+                { "title": "Inherited", "command": "top" }
+              ]
+            }
+          ]
+        }
+        """)
+
+        XCTAssertEqual(model.entries[0].kind, .command("pwd", terminal: .rex, open: .tab))
+        guard case .group(let children) = model.entries[1].kind else {
+            return XCTFail("Expected group entry.")
+        }
+        XCTAssertEqual(children[0].kind, .command("uptime", terminal: .rex, open: .current))
+        XCTAssertEqual(children[1].kind, .command("top", terminal: .terminal, open: .tab))
+    }
+
     func testRejectsInvalidJSON() throws {
         let store = try makeStore(contents: "{")
 

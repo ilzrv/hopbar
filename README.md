@@ -2,7 +2,7 @@
 
 Native lightweight macOS menu bar launcher written in Swift/AppKit.
 
-Hopbar lives only in the macOS menu bar. It reads a small JSON file, builds a nested menu, opens URLs, and runs commands in iTerm, Terminal, or Ghostty.
+Hopbar lives only in the macOS menu bar. It reads a small JSON file, builds a nested menu, opens URLs, and runs commands in iTerm, Terminal, Ghostty, or Rex.
 
 ## Install Preview DMG
 
@@ -51,7 +51,7 @@ On first launch, Hopbar creates `~/.hopbar.json`.
 }
 ```
 
-- `terminal`: `iterm`, `terminal`, or `ghostty`; default is `iterm`.
+- `terminal`: `iterm`, `terminal`, `ghostty`, or `rex`; default is `iterm`.
 - `open`: `tab`, `window`, or `current`; default is `tab`.
 - Each item must define exactly one of `command`, `url`, or `items`.
 - `terminal` and `open` can be overridden per command item or group.
@@ -64,11 +64,19 @@ Hopbar uses Apple Events to run commands in iTerm, Terminal, or Ghostty. macOS m
 
 Ghostty command execution requires Ghostty 1.3.0 or newer.
 
+For Rex, set `"terminal": "rex"` and enable **Remote Control** in [Rex settings](https://www.superlogical.com/rex/docs/reference/mac-settings#client-info) (**Server → Client Info**, or **Rex Server** in older builds). Hopbar finds the CLI inside the registered Rex app (including Rex Beta); no PATH setup is needed. `tab` creates a terminal tab, `current` sends the command to the focused terminal when the target is clear, and `window` opens a new app window. If no session exists, Hopbar creates one. When several sessions are attached and Rex cannot identify a single target, Hopbar creates or reuses a dedicated session named `Hopbar` for `tab` and `current`.
+
+Hopbar asks macOS to open Rex when needed. If Rex restores an existing window at launch, `window` creates a fresh tab in that window so it doesn't send input to a terminal you already had open.
+
+Use `current` only when the focused terminal is at an idle shell prompt: Rex receives the command as terminal input. Avoid opening or closing Rex windows while Hopbar is resolving a new window; Rex's New Window action does not return a session ID.
+
 Terminal tab mode uses System Events to create a new tab, so macOS may also ask for Accessibility permission.
 
 Launch at login uses Apple's native login item API and is available on macOS 13 or newer.
 
 ## Development
+
+Install Lua (`brew install lua`) before running the tests. The Rex tests use a simulated Rex server and don't require the app.
 
 ```sh
 swift test
